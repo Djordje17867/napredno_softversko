@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27018:27017'
+    restart: unless-stopped
+  redis:
+    image: 'redis:latest'
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    command: yarn start:dev
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_POST=6379
+      - MONGODB_URL=mongodb://mongodb:27017/hotel-api
